@@ -265,17 +265,6 @@ async function mostrarMatches(ctx) {
 }
 
 // ── Captura de texto libre ────────────────────────────────────
-bot.on('text', async ctx => {
-  const uid = String(ctx.from.id)
-  if (estaBloqueado(uid)) return ctx.reply('🔞 Lo sentimos, este bot es solo para mayores de 18 años.')
-  const estado = getPaso(uid)
-  if (!estado.actual) return
-  const texto = ctx.message.text.trim()
-  if (texto.startsWith('/')) return
-  if (estado.actual === 'busco') return ctx.reply('⚠️ Por favor, utiliza los botones de arriba.')
-  if (estado.actual === 'parte') return ctx.reply('⚠️ Por favor, elige una opción usando los botones de arriba.')
-  await procesarRespuesta(ctx, uid, estado.actual, texto)
-})
 
 async function procesarRespuesta(ctx, uid, paso, valor) {
   const estado = getPaso(uid)
@@ -482,6 +471,18 @@ bot.command('ayuda', ctx => ctx.reply(
   `/ayuda — Esta ayuda`,
   { parse_mode: 'Markdown' }
 ))
+
+bot.on('text', async ctx => {
+  const uid = String(ctx.from.id)
+  if (estaBloqueado(uid)) return ctx.reply('🔞 Lo sentimos, este bot es solo para mayores de 18 años.')
+  const estado = getPaso(uid)
+  if (!estado.actual) return
+  const texto = ctx.message.text.trim()
+  if (texto.startsWith('/')) return
+  if (estado.actual === 'busco') return ctx.reply('⚠️ Por favor, utiliza los botones de arriba.')
+  if (estado.actual === 'parte') return ctx.reply('⚠️ Por favor, elige una opción usando los botones de arriba.')
+  await procesarRespuesta(ctx, uid, estado.actual, texto)
+})
 
 // ── Arrancar ──────────────────────────────────────────────────
 bot.launch()
